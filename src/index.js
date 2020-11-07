@@ -5,6 +5,7 @@ import {
   StyleSheet,
   StatusBar,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import api from './services/api';
 
@@ -18,6 +19,15 @@ export default function App() {
     });
   }, []);
 
+  async function handleAddProject() {
+    const response = await api.post('projects', {
+      title: `New Project ${Date.now()}`,
+      owner: 'Feliz',
+    });
+
+    setProjects([...projects, response.data]);
+  }
+
   return (
     <>
       <StatusBar backgroundColor="#00F" barStyle="light-content" />
@@ -30,15 +40,13 @@ export default function App() {
             <Text style={styles.title}>{project.title}</Text>
           )}
         />
+        <TouchableOpacity
+          style={styles.button}
+          activeOpacity={0.7}
+          onPress={handleAddProject}>
+          <Text style={styles.buttonText}>Add Project</Text>
+        </TouchableOpacity>
       </SafeAreaView>
-
-      {/* <ScrollView style={styles.container}>
-        {projects.map((elem) => (
-          <Text style={styles.title} key={elem.id}>
-            {elem.title}
-          </Text>
-        ))}
-      </ScrollView> */}
     </>
   );
 }
@@ -52,5 +60,17 @@ const styles = StyleSheet.create({
     color: '#FF0',
     fontSize: 28,
     fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#FFF',
+    margin: 20,
+    height: 50,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
